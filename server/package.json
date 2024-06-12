@@ -17,6 +17,6 @@
     "express": "^4.19.2",
     "googleapis": "^137.1.0",
     "node-fetch": "^3.3.2",
-    "openai": "^4.47.3"
+    "openai": "^4.48.3"
   }
 }

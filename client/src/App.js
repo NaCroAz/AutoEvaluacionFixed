@@ -26,7 +26,7 @@ function App() {
 
   const generarPregunta = async () => {
     try {
-      const response = await fetch('http://localhost:3000/generar-pregunta', {
+      const response = await fetch('http://localhost:3003/generar-pregunta', {
         method: 'GET',
       });
 
