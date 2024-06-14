@@ -1,28 +1,30 @@
 import express from 'express';
 import { google } from 'googleapis';
-import { OpenAIApi, Configuration } from 'openai';
-import fetch from 'node-fetch';
+import OpenAIApi from 'openai';
+import cors from 'cors';
+
 
 const app = express();
-const port = 3000;
+const port = 3003;
+app.use(cors())
 
 // Configuración de OAuth2Client de Google
 const oauth2Client = new google.auth.OAuth2(
-    'clientID',
-    'clientSecret',
-    'callbackURL'
+  'client',
+  'secret',
+  'URL'
 );
 
 oauth2Client.setCredentials({
-  refresh_token: 'refreshToken',
+  refresh_token: 'refresh',
 });
 
 const forms = google.forms({ version: 'v1', auth: oauth2Client });
 
 // Configuración del cliente OpenAI
-const openai = new OpenAIApi(new Configuration({
-  apiKey: 'keyOpenAI',
-}));
+const openai = new OpenAIApi({
+  apiKey: 'openaiapi'
+});
 
 // Ruta para crear formulario
 app.post('/crear-formulario', async (req, res) => {

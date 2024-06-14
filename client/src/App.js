@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+import './App.css';
+
+
 function App() {
   const [form, setForm] = useState(null);
   const [question, setQuestion] = useState('');
@@ -42,7 +45,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="App">
       <button onClick={crearFormulario}>Crear Formulario</button>
       <button onClick={generarPregunta}>Generar Pregunta</button>
       {form && <pre>{JSON.stringify(form, null, 2)}</pre>}
