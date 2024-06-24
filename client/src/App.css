@@ -1,34 +1,49 @@
 :root {
-  --color-negro: #1B1B1D;
-  --color-blanco: #FFFFFF;
+  --color-fondo: #1B1B1D;
+  --color-texto: #eeecea;
   --color-rojo: #F04242;
   --color-amarillo: #F7BC37;
   --color-verde: #0ACE7C;
   --color-azul: #4950EB;
 }
 
-html{
-  background-color: var(--color-negro)
+.light-mode {
+  --color-fondo: #eeecea;
+  --color-texto: #1B1B1D;
+  --color-rojo: #F04242;
+  --color-amarillo: #F7BC37;
+  --color-verde: #0ACE7C;
+  --color-azul: #4950EB;
+
+  .card-item .card-number {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: var(--color-texto);
+  }
+  
 }
 
 body {
   margin: 0;
   padding: 0;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  transition: background-color 0.5s, color 0.5s;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Anta&family=Gugi&family=Monda:wght@400..700&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
-.App{
+.App {
   font-family: "Public Sans", sans-serif;
   font-optical-sizing: auto;
-  background-color: var(--color-negro);
+  background-color: var(--color-fondo);
+  padding-bottom: 20px;
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-negro); 
+  background-color: var(--color-fondo);
   padding: 30px 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -42,15 +57,22 @@ body {
   gap: 20px;
 }
 
-h1{
+h1 {
+  font-weight: 800;
   font-size: 40px;
   bottom: 30px;
 }
 
 .texts a {
   text-decoration: none;
-  color: var(--color-blanco);
+  color: var(--color-texto);
   font-size: 16px;
+}
+
+.texts a:hover,
+.texts a:active,
+.texts a.visited {
+  text-decoration: underline;
 }
 
 .switch-button {
@@ -59,6 +81,7 @@ h1{
   width: 60px;
   height: 34px;
   background: none;
+  border: none;
 }
 
 .switch-button input {
@@ -75,7 +98,7 @@ h1{
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-blanco);
+  background-color: var(--color-texto);
   transition: 0.4s;
   border-radius: 34px;
 }
@@ -85,20 +108,20 @@ h1{
   content: "";
   height: 26px;
   width: 26px;
-  left: 4px; 
-  bottom: 4px; 
-  background-color: var(--color-negro);
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--color-fondo);
   transition: 0.4s;
   border-radius: 50%;
 }
 
-input:checked + .slider {
-  background-color: var(--color-negro);
+input:checked+.slider {
+  background-color: var(--color-texto);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(26px);
-  background-color: var(--color-blanco);
+  background-color: var(--color-fondo);
 }
 
 .switch-button .slider {
@@ -124,14 +147,20 @@ input:checked + .slider:before {
 
 .card-item {
   position: relative;
-  background-color: var(--color-blanco);
+  background-color: var(--color-texto);
   padding: 20px;
   border-radius: 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: 0.5s;
   height: 250px;
+}
+
+.card-item:hover {
+  transform: scale(1.05);
+  cursor: pointer;
 }
 
 .card-item .card-number {
@@ -139,7 +168,7 @@ input:checked + .slider:before {
   top: 10px;
   left: 10px;
   background-color: rgba(255, 255, 255, 0.4);
-  color: var(--color-negro);
+  color: var(--color-fondo);
   padding: 5px 20px;
   border-radius: 12px;
   font-size: 14px;
@@ -154,7 +183,8 @@ input:checked + .slider:before {
 }
 
 .card-content h2 {
-  font-family: "Public Sans", sans-serif;;
+  font-family: "Public Sans", sans-serif;
+  ;
   text-align: left;
   margin-bottom: 10px;
   font-size: 24px;
@@ -177,22 +207,28 @@ input:checked + .slider:before {
 }
 
 .card-item h3 {
-  color: var(--color-blanco);
+  color: var(--color-texto);
 }
 
 .card-item p {
-  color: var(--color-blanco);
+  color: var(--color-texto);
 }
 
-h1, h2 {
+h1,
+h2 {
   text-align: center;
   margin-top: 40px;
-  color: var(--color-blanco);
+  color: var(--color-texto);
 }
 
-h2{
+h2 {
   font-family: "Monda", sans-serif;
   font-size: 20px;
+
+}
+
+final-text {
+  margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
