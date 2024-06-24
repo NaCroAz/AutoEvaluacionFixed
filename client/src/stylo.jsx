@@ -41,9 +41,7 @@ const CanvaEmbed = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        SkillScore
       </a>{' '}
-      by cuenta deTV
     </div>
   );
 };
