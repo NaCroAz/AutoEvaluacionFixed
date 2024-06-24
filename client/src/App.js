@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 import './App.css';
-
 
 function App() {
   const [form, setForm] = useState(null);
@@ -9,19 +8,13 @@ function App() {
 
   const crearFormulario = async () => {
     try {
-      const response = await fetch('http://localhost:3003/crear-formulario', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:3003/crear-formulario', {}, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Error en la creación del formulario');
-      }
-
-      const data = await response.json();
-      setForm(data);
+      setForm(response.data);
     } catch (error) {
       console.error('Error al crear el formulario:', error);
     }
@@ -29,16 +22,8 @@ function App() {
 
   const generarPregunta = async () => {
     try {
-      const response = await fetch('http://localhost:3003/generar-pregunta', {
-        method: 'GET',
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al generar la pregunta');
-      }
-
-      const data = await response.json();
-      setQuestion(data.question);
+      const response = await axios.get('http://localhost:3003/generar-pregunta');
+      setQuestion(response.data.question);
     } catch (error) {
       console.error('Error al generar la pregunta:', error);
     }
