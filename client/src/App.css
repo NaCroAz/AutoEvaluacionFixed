@@ -7,8 +7,28 @@
   --color-azul: #4950EB;
 }
 
+<<<<<<< Updated upstream
 html{
   background-color: var(--color-negro)
+=======
+.light-mode {
+  --color-fondo: #eeecea;
+  --color-texto: #1B1B1D;
+  --color-rojo: #F04242;
+  --color-amarillo: #F7BC37;
+  --color-verde: #0ACE7C;
+  --color-azul: #4950EB;
+
+  .card-item .card-number {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: var(--color-texto);
+  }
+
+  .final-text2 {
+    color: #5c5c5c;
+  }
+  
+>>>>>>> Stashed changes
 }
 
 body {
@@ -53,6 +73,13 @@ h1{
   font-size: 16px;
 }
 
+<<<<<<< Updated upstream
+=======
+.texts a:hover {
+  text-decoration: underline;
+}
+
+>>>>>>> Stashed changes
 .switch-button {
   position: relative;
   display: inline-block;
@@ -193,6 +220,51 @@ h1, h2 {
 h2{
   font-family: "Monda", sans-serif;
   font-size: 20px;
+<<<<<<< Updated upstream
+=======
+
+}
+
+.concepto{
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(131, 131, 131, 0.1);
+}
+
+final-text {
+  margin-bottom: 0;
+>>>>>>> Stashed changes
+}
+
+.final-text2 {
+  font-size: 1.2rem;
+  color: #a7a7a7;
+  margin-top: 10px;
+  text-align: justify;
+}
+
+.final-text2 strong {
+  color: var(--color-amarillo);
+}
+
+.final-text2 em {
+  color: var(--color-verde);
+}
+
+.final-text2 .highlight-rojo {
+  background-color: var(--color-rojo);
+  color: white;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+.final-text2 .highlight-azul {
+  background-color: var(--color-azul);
+  color: white;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
 }
 
 @media (max-width: 768px) {

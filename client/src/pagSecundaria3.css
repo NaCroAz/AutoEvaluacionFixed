@@ -1,0 +1,131 @@
+:root {
+  --color-fondo: #1B1B1D;
+  --color-texto: #eeecea;
+  --color-rojo: #F04242;
+  --color-amarillo: #F7BC37;
+  --color-verde: #06b86d;
+  --color-azul: #4950EB;
+}
+
+.light-mode {
+  --color-fondo: #eeecea;
+  --color-texto: #1B1B1D;
+  --color-rojo: #F04242;
+  --color-amarillo: #F7BC37;
+  --color-verde: #06a865;
+  --color-azul: #4950EB;
+
+  .form_container3 {
+    background-color: rgba(139, 136, 136, 0.9);
+  }
+
+  .message.bot3 {
+    background-color: rgba(56, 235, 146, 0.877);
+  }
+
+  .message.user {
+    background-color: rgba(226, 223, 223, 0.938);
+  }
+
+  .input_container3 input::placeholder {
+    color: rgba(10, 10, 10, 0.548);
+  }
+}
+
+.App3{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: "Public Sans", sans-serif;
+  background-color: var(--color-fondo);
+}
+
+.form_container3 {
+  left: 20px;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  max-width: 800px;
+  background-color: rgba(71, 69, 69, 0.9);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+.chat_area3 {
+  position: relative; 
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 40%;
+  min-height: 400px;
+}
+
+.message.bot3 {
+  text-align: left;
+  margin-bottom: 5px;
+  background-color: rgba(4, 196, 122, 0.877);
+  border-radius: 12px;
+}
+
+.message.user {
+  text-align: right;
+  margin-bottom: 5px;
+  background-color: rgba(138, 133, 133, 0.938);
+  border-radius: 12px;
+}
+
+.chat_area3 p {
+  margin: 0;
+  padding: 8px 12px;
+  word-wrap: break-word;
+  color: var(--color-texto);
+}
+
+.input_container3 {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-radius: 25px;
+  padding: 5px 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.input_container3 input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 12px;
+  border-radius: 25px;
+  background-color: var(--color-verde);
+  color: var(--color-texto);
+  z-index: 1;
+}
+
+.input_container3 input::placeholder {
+  color: rgba(255, 255, 255, 0.658);
+}
+
+.input_container3 button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--color-texto);
+  color: var(--color-fondo);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  z-index: 2;
+}
+
+  
