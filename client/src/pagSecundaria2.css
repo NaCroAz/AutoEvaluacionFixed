@@ -15,12 +15,12 @@
   --color-verde: #0ACE7C;
   --color-azul: #4950EB;
 
-  .form_container {
+  .form_container2 {
     background-color: rgba(139, 136, 136, 0.9);
   }
 
-  .message.bot1 {
-    background-color: rgba(235, 56, 56, 0.877);
+  .message.bot2 {
+    background-color: rgba(235, 193, 56, 0.877);
   }
 
   .message.user {
@@ -32,7 +32,7 @@
   }
 }
 
-.App1{
+.App2{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +41,7 @@
   background-color: var(--color-fondo);
 }
 
-.form_container {
+.form_container2 {
   left: 20px;
   position: relative;
   justify-content: center;
@@ -54,7 +54,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 }
 
-.chat_area {
+.chat_area2 {
   position: relative; 
   margin-bottom: 20px;
   padding: 20px;
@@ -65,10 +65,10 @@
   min-height: 400px;
 }
 
-.message.bot1 {
+.message.bot2 {
   text-align: left;
   margin-bottom: 5px;
-  background-color: rgba(235, 51, 51, 0.877);
+  background-color: rgba(224, 184, 3, 0.877);
   border-radius: 12px;
 }
 
@@ -79,14 +79,14 @@
   border-radius: 12px;
 }
 
-.chat_area p {
+.chat_area2 p {
   margin: 0;
   padding: 8px 12px;
   word-wrap: break-word;
   color: var(--color-texto);
 }
 
-.input_container {
+.input_container2 {
   display: flex;
   align-items: center;
   position: relative;
@@ -95,23 +95,23 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.input_container input {
+.input_container2 input {
   flex: 1;
   border: none;
   outline: none;
   font-size: 14px;
   padding: 12px;
   border-radius: 25px;
-  background-color: var(--color-rojo);
+  background-color: var(--color-amarillo);
   color: var(--color-texto);
   z-index: 1;
 }
 
-.input_container input::placeholder {
-  color: rgba(255, 255, 255, 0.548);
+.input_container2 input::placeholder {
+  color: rgba(255, 255, 255, 0.658);
 }
 
-.input_container button {
+.input_container2 button {
   position: absolute;
   font-weight: bold;
   right: 10px;

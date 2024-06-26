@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './pagSecundaria.css';
+import './pagSecundaria3.css';
 import logoBlack from './Logo-for-Black-Ver.png';
 import logoWhite from './Logo-for-White-Ver.png';
 
-function PagSecundaria({ isDarkMode, setIsDarkMode }) {
+function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
     const [chatMessages, setChatMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [logoSrc, setLogoSrc] = React.useState(isDarkMode ? logoBlack : logoWhite);
@@ -15,20 +15,18 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
 
     const fetchInitialMessages = async () => {
         setChatMessages([
-            { content: '¡Bienvenido! Soy SkillBot (nivel primario)', sender: 'bot1', timestamp: new Date() },
-            { content: '¿Sos lo suficientemente valiente como para poner a prueba tus conocimientos? ¡Ingresa los temas a evaluar y ponte a prueba!', sender: 'bot1', timestamp: new Date() }
+            { content: '¡Bienvenido! Soy SkillBot (nivel superior)', sender: 'bot3', timestamp: new Date() },
+            { content: 'Profundiza en los temas seleccionados y verifica tu nivel de comprensión académica.', sender: 'bot3', timestamp: new Date() }
         ]);
     };
 
     const generarPregunta = async () => {
         try {
             const response = await axios.get('http://localhost:3003/generar-pregunta');
-            const newMessage = { content: response.data.question, sender: 'bot1', timestamp: new Date() };
+            const newMessage = { content: response.data.question, sender: 'user', timestamp: new Date() };
             setChatMessages([...chatMessages, newMessage]);
         } catch (error) {
             console.error('Error al generar la pregunta:', error);
-            const errorMessage = { content: 'Error al generar la pregunta.', sender: 'bot1', timestamp: new Date() };
-            setChatMessages([...chatMessages, errorMessage]);
         }
         setInputValue('');
     };
@@ -55,20 +53,20 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
     };
 
     return (
-        <div className={`App1 ${isDarkMode ? '' : 'light-mode'}`}>
+        <div className={`App2 ${isDarkMode ? '' : 'light-mode'}`}>
             <button className="switch-button">
                 <input type="checkbox" id="toggle" onClick={toggleDarkMode} />
                 <label htmlFor="toggle" className="slider round"></label>
             </button>
-            <div className='form_container'>
-                <div className='chat_area' style={{ backgroundImage: `url(${logoSrc})` }}>
+            <div className='form_container3'>
+                <div className='chat_area3' style={{ backgroundImage: `url(${logoSrc})` }}>
                     {chatMessages.map((message, index) => (
                         <div key={index} className={`message ${message.sender}`}>
                             <p>{message.content}</p>
                         </div>
                     ))}
                 </div>
-                <div className='input_container'>
+                <div className='input_container3'>
                     <input
                         type='text'
                         placeholder='Ingresar temas a evaluar'
@@ -83,5 +81,5 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
     );
 }
 
-export default PagSecundaria;
+export default PagSecundaria3;
 

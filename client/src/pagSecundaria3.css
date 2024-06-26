@@ -3,7 +3,7 @@
   --color-texto: #eeecea;
   --color-rojo: #F04242;
   --color-amarillo: #F7BC37;
-  --color-verde: #0ACE7C;
+  --color-verde: #06b86d;
   --color-azul: #4950EB;
 }
 
@@ -12,27 +12,27 @@
   --color-texto: #1B1B1D;
   --color-rojo: #F04242;
   --color-amarillo: #F7BC37;
-  --color-verde: #0ACE7C;
+  --color-verde: #06a865;
   --color-azul: #4950EB;
 
-  .form_container {
+  .form_container3 {
     background-color: rgba(139, 136, 136, 0.9);
   }
 
-  .message.bot1 {
-    background-color: rgba(235, 56, 56, 0.877);
+  .message.bot3 {
+    background-color: rgba(56, 235, 146, 0.877);
   }
 
   .message.user {
     background-color: rgba(226, 223, 223, 0.938);
   }
 
-  .input_container input::placeholder {
+  .input_container3 input::placeholder {
     color: rgba(10, 10, 10, 0.548);
   }
 }
 
-.App1{
+.App3{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +41,7 @@
   background-color: var(--color-fondo);
 }
 
-.form_container {
+.form_container3 {
   left: 20px;
   position: relative;
   justify-content: center;
@@ -54,7 +54,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 }
 
-.chat_area {
+.chat_area3 {
   position: relative; 
   margin-bottom: 20px;
   padding: 20px;
@@ -65,10 +65,10 @@
   min-height: 400px;
 }
 
-.message.bot1 {
+.message.bot3 {
   text-align: left;
   margin-bottom: 5px;
-  background-color: rgba(235, 51, 51, 0.877);
+  background-color: rgba(4, 196, 122, 0.877);
   border-radius: 12px;
 }
 
@@ -79,14 +79,14 @@
   border-radius: 12px;
 }
 
-.chat_area p {
+.chat_area3 p {
   margin: 0;
   padding: 8px 12px;
   word-wrap: break-word;
   color: var(--color-texto);
 }
 
-.input_container {
+.input_container3 {
   display: flex;
   align-items: center;
   position: relative;
@@ -95,23 +95,23 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.input_container input {
+.input_container3 input {
   flex: 1;
   border: none;
   outline: none;
   font-size: 14px;
   padding: 12px;
   border-radius: 25px;
-  background-color: var(--color-rojo);
+  background-color: var(--color-verde);
   color: var(--color-texto);
   z-index: 1;
 }
 
-.input_container input::placeholder {
-  color: rgba(255, 255, 255, 0.548);
+.input_container3 input::placeholder {
+  color: rgba(255, 255, 255, 0.658);
 }
 
-.input_container button {
+.input_container3 button {
   position: absolute;
   font-weight: bold;
   right: 10px;
