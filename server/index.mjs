@@ -19,31 +19,78 @@ const makeGeminiRequest = async (prompt, tipo) => {
         const apiKey = process.env.GEMINI_API_KEY;
 
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: "sos un profesor de primaria de un escuela argentina"});
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: `sos un profesor de ${tipo} de un escuela argentina` });
 
         let modelPrompt = prompt;
         switch (tipo) {
             case 'primario':
-                modelPrompt += '; Responder como un profesor de nivel primario';
-                modelPrompt += '; Apegarse al plan de estudio argentino para nivel primario en áreas como Matemáticas, Ciencias Naturales, Lengua, Geografía, etc.';
-                modelPrompt += '; Prohibir el uso de texto en negrita (bold text), asteriscos (asterisks), doble asteriscos (double asterisks) y emojis completamente.';
+                modelPrompt += '; Responder con la pedagogia que se necesita para tratar con niños';
+                modelPrompt += '; Apegarse al plan de estudio argentino a nivel primario para crear el examen (de 3 preguntas) del tema pedido por el usuario.';
+                modelPrompt += '; Prohibido el uso de texto en negrita (bold text), asteriscos (asterisks, "*"), doble asteriscos (double asterisks, "**") y emojis completamente.';
                 modelPrompt += '; Prohibir preguntas que requieran o usen imágenes, dibujos u cualquier otro medio para su resolución.';
-                modelPrompt += '; Evitar cambiar a temas que no estén relacionados con la educación de nivel primario.';
                 modelPrompt += '; No permitir respuestas que puedan ser dañinas para la psique de un menor de edad o que contengan contenido no apto para su edad.';
-                modelPrompt += '; Aclarar al usuario que no se pueden hacer preguntas que estén fuera del ámbito de la educación de nivel primario.';
+                modelPrompt += '; Aclarar al usuario que no se pueden hacer preguntas que estén fuera de topico cuando este intente salirse del mismo.';
 
                 //EXAMEN
-                modelPrompt += '; Limitar las preguntas de opción múltiple a un máximo de cuatro opciones y un mínimo de tres opciones.';
-                modelPrompt += '; Las preguntas con respuestas abiertas no deben ser demasiado extensas y no pueden exceder un máximo de tres por examen.';
+                modelPrompt += '; Limitar las preguntas de opción múltiple a tres opciones.';
+                modelPrompt += '; Las preguntas con respuestas abiertas no deben ser demasiado extensas y no pueden exceder un máximo de dos por examen.';
+                modelPrompt += '; pida al usuario contestar los puntos del examen con formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3"';
+
+                //RESPUESTA
+                modelPrompt += '; Si la respuesta del usuario tiene formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3" calificarlo en base al examen enviado previamente';
+                modelPrompt += '; Puntuar la resolucion del alumno con calificacion del 1 a 10 (con decimales) y comunicarsela al usuario con feedback';
+
                 break;
             case 'secundario':
-                modelPrompt += '; responder como un profesor de nivel secundario (prohibido usar emojis)';
+                modelPrompt += '; Responder con la pedagogia que se necesita para tratar con adolescentes';
+                modelPrompt += '; Apegarse al plan de estudio argentino a nivel secundario para crear el examen (de 3 preguntas) del tema pedido por el usuario.';
+                modelPrompt += '; Prohibido el uso de texto en negrita (bold text), asteriscos (asterisks, "*"), doble asteriscos (double asterisks, "**") y emojis completamente.';
+                modelPrompt += '; Prohibir preguntas que requieran o usen imágenes, dibujos u cualquier otro medio para su resolución.';
+                modelPrompt += '; No permitir respuestas que puedan ser dañinas para la psique de un menor de edad o que contengan contenido no apto para su edad.';
+                modelPrompt += '; Aclarar al usuario que no se pueden hacer preguntas que estén fuera de topico cuando este intente salirse del mismo.';
+
+                //EXAMEN
+                modelPrompt += '; Limitar las preguntas de opción múltiple a tres opciones.';
+                modelPrompt += '; Las preguntas con respuestas abiertas no deben ser demasiado extensas y no pueden exceder un máximo de dos por examen.';
+                modelPrompt += '; pida al usuario contestar los puntos del examen con formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3"';
+
+                //RESPUESTA
+                modelPrompt += '; Si la respuesta del usuario tiene formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3" calificarlo en base al examen enviado previamente';
+                modelPrompt += '; Puntuar la resolucion del alumno con calificacion del 1 a 10 (con decimales) y comunicarsela al usuario con feedback';
                 break;
             case 'superior':
-                modelPrompt += '; responder como un profesor de nivel terciario (prohibido usar emojis)';
+                modelPrompt += '; Responder con la pedagogia que se necesita para tratar con el adulto joven';
+                modelPrompt += '; Apegarse al plan de estudio argentino a nivel terciario para crear el examen (de 3 preguntas) del tema pedido por el usuario.';
+                modelPrompt += '; Prohibido el uso de texto en negrita (bold text), asteriscos (asterisks, "*"), doble asteriscos (double asterisks, "**") y emojis completamente.';
+                modelPrompt += '; Prohibir preguntas que requieran o usen imágenes, dibujos u cualquier otro medio para su resolución.';
+                modelPrompt += '; No permitir respuestas que puedan ser dañinas para la psique de la persona.';
+                modelPrompt += '; Aclarar al usuario que no se pueden hacer preguntas que estén fuera de topico cuando este intente salirse del mismo.';
+
+                //EXAMEN
+                modelPrompt += '; Limitar las preguntas de opción múltiple a tres opciones.';
+                modelPrompt += '; Las preguntas con respuestas abiertas no deben ser demasiado extensas y no pueden exceder un máximo de dos por examen.';
+                modelPrompt += '; pida al usuario contestar los puntos del examen con formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3"';
+
+                //RESPUESTA
+                modelPrompt += '; Si la respuesta del usuario tiene formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3" calificarlo en base al examen enviado previamente';
+                modelPrompt += '; Puntuar la resolucion del alumno con calificacion del 1 a 10 (con decimales) y comunicarsela al usuario con feedback';
                 break;
             case 'autodidacta':
-                modelPrompt += '; responder como un autodidacta (prohibido usar emojis)';
+                modelPrompt += '; Responder con la pedagogia que se necesita para tratar con el adulto';
+                modelPrompt += '; Apegarse al plan de un autodidacta para crear el examen (de 3 preguntas) del tema pedido por el usuario.';
+                modelPrompt += '; Prohibido el uso de texto en negrita (bold text), asteriscos (asterisks, "*"), doble asteriscos (double asterisks, "**") y emojis completamente.';
+                modelPrompt += '; Prohibir preguntas que requieran o usen imágenes, dibujos u cualquier otro medio para su resolución.';
+                modelPrompt += '; No permitir respuestas que puedan ser dañinas para la psique de la persona.';
+                modelPrompt += '; Aclarar al usuario que no se pueden hacer preguntas que estén fuera de topico cuando este intente salirse del mismo.';
+
+                //EXAMEN
+                modelPrompt += '; Limitar las preguntas de opción múltiple a tres opciones.';
+                modelPrompt += '; Las preguntas con respuestas abiertas no deben ser demasiado extensas y no pueden exceder un máximo de dos por examen.';
+                modelPrompt += '; pida al usuario contestar los puntos del examen con formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3"';
+
+                //RESPUESTA
+                modelPrompt += '; Si la respuesta del usuario tiene formato "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3" calificarlo en base al examen enviado previamente';
+                modelPrompt += '; Puntuar la resolucion del alumno con calificacion del 1 a 10 (con decimales) y comunicarsela al usuario con feedback';
                 break;
             default:
                 throw new Error(`Tipo '${tipo}' no reconocido`);
@@ -88,13 +135,39 @@ const puntuarExamen = (respuestasUsuario, examen) => {
     examen.forEach(pregunta => {
         if (pregunta.tipo === 'opcion_multiple') {
             if (respuestasUsuario[pregunta.tema] === pregunta.respuesta_correcta) {
-                puntaje += 1;
+                puntaje += 1; // Puntaje por cada pregunta de opción múltiple correcta
             }
+        } else if (pregunta.tipo === 'desarrollo') {
+            // Aquí se podría implementar la evaluación de respuestas de desarrollo
+            // Por ejemplo, validar si la respuesta coincide con ciertos criterios esperados
+            // y asignar un puntaje basado en la calidad de la respuesta.
+            // Asumiremos un esquema simple donde se da 1 punto por cada respuesta de desarrollo aceptable.
+            puntaje += 1;
         }
     });
 
     return puntaje;
 };
+
+
+app.post('/evaluar-examen', async (req, res) => {
+    try {
+        const { respuestasUsuario, examen } = req.body; // Obtiene respuestasUsuario y examen del cuerpo del mensaje
+
+        const puntaje = puntuarExamen(respuestasUsuario, examen);
+        console.log('Puntaje del usuario:', puntaje);
+
+        // Determinar si aprobó o no según tus criterios (por ejemplo, puntaje >= 6)
+        const aprobado = puntaje >= 6;
+
+        // Devolver el resultado de la evaluación
+        res.status(200).json({ puntaje, aprobado });
+    } catch (error) {
+        console.error('Error al evaluar el examen:', error);
+        res.status(500).json({ error: 'Error al evaluar el examen' });
+    }
+});
+
 
 app.post('/generate-question', async (req, res) => {
     try {

@@ -7,6 +7,21 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
     const [chatMessages, setChatMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [logoSrc, setLogoSrc] = useState(isDarkMode ? logoBlack : logoWhite);
+    const examen = [
+        {
+            tema: 'Tema 1',
+            tipo: 'opcion_multiple',
+            pregunta: '¿Cuál es la capital de Argentina?',
+            opciones: ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza'],
+            respuesta_correcta: 'Buenos Aires'
+        },
+        {
+            tema: 'Tema 2',
+            tipo: 'desarrollo',
+            pregunta: 'Explique brevemente el proceso de fotosíntesis.'
+        }
+        // Add more questions as needed
+    ];
 
     const chatAreaRef = useRef(null);
 
@@ -38,7 +53,7 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ prompt: inputValue, tipo: "primario"}),
+                body: JSON.stringify({ prompt: inputValue, tipo: "primario" }),
             });
             const data = await response.json();
             const newMessage = { content: data.question, sender: 'bot1', timestamp: new Date() };
@@ -58,10 +73,7 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
         if (e.key === 'Enter') {
             e.preventDefault();
             if (inputValue.trim() !== '') {
-                const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
-                setChatMessages(prevMessages => [...prevMessages, newMessage]);
-                setInputValue('');
-                generarPregunta();
+                sendMessage();
             }
         }
     };
@@ -69,12 +81,54 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
     const handleButtonClick = (e) => {
         e.preventDefault();
         if (inputValue.trim() !== '') {
-            const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
-            setChatMessages(prevMessages => [...prevMessages, newMessage]);
-            setInputValue('');
-            generarPregunta();
+            sendMessage();
         }
     };
+
+    const sendMessage = () => {
+        const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
+        setChatMessages(prevMessages => [...prevMessages, newMessage]);
+        setInputValue('');
+        generarPregunta();
+    };
+
+    const evaluarResultados = () => {
+        const respuestasUsuario = {}; // Object to store user's answers
+
+        // Extract user's answers from chatMessages
+        chatMessages.forEach(message => {
+            if (message.sender === 'user') {
+                // Assuming user's answers for multiple-choice questions are in a specific format
+                // Example: "1. Respuesta 1, 2. Respuesta 2, 3. Respuesta 3"
+                // You need to parse and store these answers appropriately
+                // For simplicity, assume direct mapping from chatMessages for now
+                respuestasUsuario[message.tema] = message.content; // Adjust as per your actual structure
+            }
+        });
+
+        // Evaluate the exam using the function defined on the server side
+        fetch('http://localhost:3003/evaluar-examen', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ respuestasUsuario, examen }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const puntaje = data.puntaje;
+                const resultados = `Resultados del examen: ${puntaje >= examen.length / 2 ? 'Aprobado' : 'No aprobado'}`;
+                const mensajeResultado = { content: resultados, sender: 'bot1', timestamp: new Date() };
+                setChatMessages(prevMessages => [...prevMessages, mensajeResultado]);
+            })
+            .catch(error => {
+                console.error('Error al evaluar el examen:', error);
+                const errorMessage = { content: 'Error al evaluar el examen.', sender: 'bot1', timestamp: new Date() };
+                setChatMessages(prevMessages => [...prevMessages, errorMessage]);
+            });
+    };
+
+
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
@@ -91,10 +145,10 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
                 <div ref={chatAreaRef} className='chat_area' style={{ backgroundImage: `url(${logoSrc})`, overflowY: 'auto' }}>
                     {chatMessages.map((message, index) => (
                         <div key={index} className={`message ${message.sender}`}>
-                            {typeof message.content === 'string' ? 
+                            {typeof message.content === 'string' ?
                                 message.content.split('\n').map((paragraph, i) => (
                                     <p key={i}>{paragraph}</p>
-                                )) : 
+                                )) :
                                 <p>{JSON.stringify(message.content)}</p>
                             }
                         </div>
@@ -109,6 +163,7 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
                         onKeyPress={handleKeyPress}
                     />
                     <button onClick={handleButtonClick}>Enviar</button>
+                    <button onClick={evaluarResultados}>Evaluar</button>
                 </div>
             </div>
         </div>
@@ -116,4 +171,3 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
 }
 
 export default PagSecundaria;
-
