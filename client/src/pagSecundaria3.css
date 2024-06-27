@@ -63,6 +63,23 @@
   background-position: center center;
   background-size: 40%;
   min-height: 400px;
+  overflow-y: auto;
+  max-height: 60vh;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-verde) var(--color-fondo);
+}
+
+.concepto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.concepto::-webkit-scrollbar-thumb {
+  background-color: var(--color-azul);
+  border-radius: 4px;
+}
+
+.concepto::-webkit-scrollbar-track {
+  background-color: var(--color-fondo);
 }
 
 .message.bot3 {

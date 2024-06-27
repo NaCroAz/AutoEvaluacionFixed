@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
 import './pagSecundaria.css';
 import logoBlack from './Logo-for-Black-Ver.png';
 import logoWhite from './Logo-for-White-Ver.png';
@@ -7,30 +6,48 @@ import logoWhite from './Logo-for-White-Ver.png';
 function PagSecundaria({ isDarkMode, setIsDarkMode }) {
     const [chatMessages, setChatMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
-    const [logoSrc, setLogoSrc] = React.useState(isDarkMode ? logoBlack : logoWhite);
+    const [logoSrc, setLogoSrc] = useState(isDarkMode ? logoBlack : logoWhite);
+
+    const chatAreaRef = useRef(null);
 
     useEffect(() => {
         fetchInitialMessages();
     }, []);
 
-    const fetchInitialMessages = async () => {
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatMessages]);
+
+    const scrollToBottom = () => {
+        if (chatAreaRef.current) {
+            chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+        }
+    };
+
+    const fetchInitialMessages = () => {
         setChatMessages([
             { content: '¡Bienvenido! Soy SkillBot (nivel primario)', sender: 'bot1', timestamp: new Date() },
-            { content: '¿Sos lo suficientemente valiente como para poner a prueba tus conocimientos? ¡Ingresa los temas a evaluar y ponte a prueba!', sender: 'bot1', timestamp: new Date() }
+            { content: '¿Listo para demostrar tu conocimiento y alcanzar tu potencial?', sender: 'bot1', timestamp: new Date() }
         ]);
     };
 
     const generarPregunta = async () => {
         try {
-            const response = await axios.get('http://localhost:3003/generar-pregunta');
-            const newMessage = { content: response.data.question, sender: 'bot1', timestamp: new Date() };
-            setChatMessages([...chatMessages, newMessage]);
+            const response = await fetch('http://localhost:3003/generate-question', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: inputValue, tipo: "primario"}),
+            });
+            const data = await response.json();
+            const newMessage = { content: data.question, sender: 'bot1', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, newMessage]);
         } catch (error) {
             console.error('Error al generar la pregunta:', error);
             const errorMessage = { content: 'Error al generar la pregunta.', sender: 'bot1', timestamp: new Date() };
-            setChatMessages([...chatMessages, errorMessage]);
+            setChatMessages(prevMessages => [...prevMessages, errorMessage]);
         }
-        setInputValue('');
     };
 
     const handleInputChange = (e) => {
@@ -42,10 +59,20 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
             e.preventDefault();
             if (inputValue.trim() !== '') {
                 const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
-                setChatMessages([...chatMessages, newMessage]);
+                setChatMessages(prevMessages => [...prevMessages, newMessage]);
+                setInputValue('');
                 generarPregunta();
             }
+        }
+    };
+
+    const handleButtonClick = (e) => {
+        e.preventDefault();
+        if (inputValue.trim() !== '') {
+            const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, newMessage]);
             setInputValue('');
+            generarPregunta();
         }
     };
 
@@ -55,16 +82,21 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
     };
 
     return (
-        <div className={`App1 ${isDarkMode ? '' : 'light-mode'}`}>
+        <div className={`App2 ${isDarkMode ? '' : 'light-mode'}`}>
             <button className="switch-button">
                 <input type="checkbox" id="toggle" onClick={toggleDarkMode} />
                 <label htmlFor="toggle" className="slider round"></label>
             </button>
             <div className='form_container'>
-                <div className='chat_area' style={{ backgroundImage: `url(${logoSrc})` }}>
+                <div ref={chatAreaRef} className='chat_area' style={{ backgroundImage: `url(${logoSrc})`, overflowY: 'auto' }}>
                     {chatMessages.map((message, index) => (
                         <div key={index} className={`message ${message.sender}`}>
-                            <p>{message.content}</p>
+                            {typeof message.content === 'string' ? 
+                                message.content.split('\n').map((paragraph, i) => (
+                                    <p key={i}>{paragraph}</p>
+                                )) : 
+                                <p>{JSON.stringify(message.content)}</p>
+                            }
                         </div>
                     ))}
                 </div>
@@ -76,7 +108,7 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
                         onChange={handleInputChange}
                         onKeyPress={handleKeyPress}
                     />
-                    <button onClick={handleKeyPress}>Enviar</button>
+                    <button onClick={handleButtonClick}>Enviar</button>
                 </div>
             </div>
         </div>

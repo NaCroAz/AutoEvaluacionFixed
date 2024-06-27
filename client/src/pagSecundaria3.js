@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
 import './pagSecundaria3.css';
 import logoBlack from './Logo-for-Black-Ver.png';
 import logoWhite from './Logo-for-White-Ver.png';
@@ -9,9 +8,21 @@ function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
     const [inputValue, setInputValue] = useState('');
     const [logoSrc, setLogoSrc] = React.useState(isDarkMode ? logoBlack : logoWhite);
 
+    const chatAreaRef = useRef(null);
+
     useEffect(() => {
         fetchInitialMessages();
     }, []);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatMessages]);
+
+    const scrollToBottom = () => {
+        if (chatAreaRef.current) {
+            chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+        }
+    };
 
     const fetchInitialMessages = async () => {
         setChatMessages([
@@ -22,13 +33,21 @@ function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
 
     const generarPregunta = async () => {
         try {
-            const response = await axios.get('http://localhost:3003/generar-pregunta');
-            const newMessage = { content: response.data.question, sender: 'user', timestamp: new Date() };
-            setChatMessages([...chatMessages, newMessage]);
+            const response = await fetch('http://localhost:3003/generate-question', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: inputValue, tipo: "superior"}),
+            });
+            const data = await response.json();
+            const newMessage = { content: data.question, sender: 'bot3', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, newMessage]);
         } catch (error) {
             console.error('Error al generar la pregunta:', error);
+            const errorMessage = { content: 'Error al generar la pregunta.', sender: 'bot3', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, errorMessage]);
         }
-        setInputValue('');
     };
 
     const handleInputChange = (e) => {
@@ -40,10 +59,20 @@ function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
             e.preventDefault();
             if (inputValue.trim() !== '') {
                 const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
-                setChatMessages([...chatMessages, newMessage]);
+                setChatMessages(prevMessages => [...prevMessages, newMessage]);
+                setInputValue('');
                 generarPregunta();
             }
+        }
+    };
+
+    const handleButtonClick = (e) => {
+        e.preventDefault();
+        if (inputValue.trim() !== '') {
+            const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, newMessage]);
             setInputValue('');
+            generarPregunta();
         }
     };
 
@@ -74,7 +103,7 @@ function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
                         onChange={handleInputChange}
                         onKeyPress={handleKeyPress}
                     />
-                    <button onClick={handleKeyPress}>Enviar</button>
+                    <button onClick={handleButtonClick}>Enviar</button>
                 </div>
             </div>
         </div>

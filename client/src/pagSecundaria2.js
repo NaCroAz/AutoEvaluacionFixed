@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
 import './pagSecundaria2.css';
 import logoBlack from './Logo-for-Black-Ver.png';
 import logoWhite from './Logo-for-White-Ver.png';
@@ -8,10 +7,15 @@ function PagSecundaria2({ isDarkMode, setIsDarkMode }) {
     const [chatMessages, setChatMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [logoSrc, setLogoSrc] = React.useState(isDarkMode ? logoBlack : logoWhite);
+    const chatAreaRef = useRef(null);
 
     useEffect(() => {
         fetchInitialMessages();
     }, []);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatMessages]);
 
     const fetchInitialMessages = async () => {
         setChatMessages([
@@ -22,13 +26,21 @@ function PagSecundaria2({ isDarkMode, setIsDarkMode }) {
 
     const generarPregunta = async () => {
         try {
-            const response = await axios.get('http://localhost:3003/generar-pregunta');
-            const newMessage = { content: response.data.question, sender: 'user', timestamp: new Date() };
-            setChatMessages([...chatMessages, newMessage]);
+            const response = await fetch('http://localhost:3003/generate-question', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: inputValue, tipo: "secundario"}),
+            });
+            const data = await response.json();
+            const newMessage = { content: data.question, sender: 'bot2', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, newMessage]);
         } catch (error) {
             console.error('Error al generar la pregunta:', error);
+            const errorMessage = { content: 'Error al generar la pregunta.', sender: 'bot2', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, errorMessage]);
         }
-        setInputValue('');
     };
 
     const handleInputChange = (e) => {
@@ -40,16 +52,32 @@ function PagSecundaria2({ isDarkMode, setIsDarkMode }) {
             e.preventDefault();
             if (inputValue.trim() !== '') {
                 const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
-                setChatMessages([...chatMessages, newMessage]);
+                setChatMessages(prevMessages => [...prevMessages, newMessage]);
+                setInputValue('');
                 generarPregunta();
             }
+        }
+    };
+
+    const handleButtonClick = (e) => {
+        e.preventDefault();
+        if (inputValue.trim() !== '') {
+            const newMessage = { content: inputValue, sender: 'user', timestamp: new Date() };
+            setChatMessages(prevMessages => [...prevMessages, newMessage]);
             setInputValue('');
+            generarPregunta();
         }
     };
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
         setLogoSrc(isDarkMode ? logoWhite : logoBlack);
+    };
+
+    const scrollToBottom = () => {
+        if (chatAreaRef.current) {
+            chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+        }
     };
 
     return (
@@ -59,7 +87,7 @@ function PagSecundaria2({ isDarkMode, setIsDarkMode }) {
                 <label htmlFor="toggle" className="slider round"></label>
             </button>
             <div className='form_container2'>
-                <div className='chat_area2' style={{ backgroundImage: `url(${logoSrc})` }}>
+                <div ref={chatAreaRef} className='chat_area2' style={{ backgroundImage: `url(${logoSrc})`, overflowY: 'auto' }}>
                     {chatMessages.map((message, index) => (
                         <div key={index} className={`message ${message.sender}`}>
                             <p>{message.content}</p>
@@ -74,7 +102,7 @@ function PagSecundaria2({ isDarkMode, setIsDarkMode }) {
                         onChange={handleInputChange}
                         onKeyPress={handleKeyPress}
                     />
-                    <button onClick={handleKeyPress}>Enviar</button>
+                    <button onClick={handleButtonClick}>Enviar</button>
                 </div>
             </div>
         </div>
@@ -82,4 +110,5 @@ function PagSecundaria2({ isDarkMode, setIsDarkMode }) {
 }
 
 export default PagSecundaria2;
+
 

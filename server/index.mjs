@@ -1,9 +1,8 @@
 import express from 'express';
-import { google } from 'googleapis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import axios from 'axios';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
@@ -11,107 +10,105 @@ const app = express();
 const port = 3003;
 
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.json());
 
-// Configuración de OAuth2Client de Google
-const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
-);
+const makeGeminiRequest = async (prompt, tipo) => {
+    try {
+        console.log('Iniciando solicitud a la API de Gemini');
+        const apiKey = process.env.GEMINI_API_KEY;
 
-oauth2Client.setCredentials({
-  refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-});
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: "sos un profesor de primaria de un escuela argentina"});
 
-const forms = google.forms({ version: 'v1', auth: oauth2Client });
+        let modelPrompt = prompt;
+        switch (tipo) {
+            case 'primario':
+                modelPrompt += '; Responder como un profesor de nivel primario';
+                modelPrompt += '; Apegarse al plan de estudio argentino para nivel primario en áreas como Matemáticas, Ciencias Naturales, Lengua, Geografía, etc.';
+                modelPrompt += '; Prohibir el uso de texto en negrita (bold text), asteriscos (asterisks), doble asteriscos (double asterisks) y emojis completamente.';
+                modelPrompt += '; Prohibir preguntas que requieran o usen imágenes, dibujos u cualquier otro medio para su resolución.';
+                modelPrompt += '; Evitar cambiar a temas que no estén relacionados con la educación de nivel primario.';
+                modelPrompt += '; No permitir respuestas que puedan ser dañinas para la psique de un menor de edad o que contengan contenido no apto para su edad.';
+                modelPrompt += '; Aclarar al usuario que no se pueden hacer preguntas que estén fuera del ámbito de la educación de nivel primario.';
 
-// Ruta para crear formulario
-app.post('/crear-formulario', async (req, res) => {
-  try {
-    // Crear el formulario con solo el título
-    const form = {
-      info: { title: "Autoevaluación de Estudiantes" }
-    };
-
-    const createdForm = await forms.forms.create({ requestBody: form });
-    const formId = createdForm.data.formId;
-
-    // Añadir preguntas usando batchUpdate
-    const requests = [
-      {
-        createItem: {
-          item: {
-            title: "Pregunta 1",
-            questionItem: {
-              question: {
-                required: true,
-                choiceQuestion: {
-                  type: 'RADIO',
-                  options: [
-                    { value: "Opción 1" },
-                    { value: "Opción 2" },
-                    { value: "Opción 3" },
-                    { value: "Opción 4" }
-                  ],
-                },
-              },
-            },
-          },
-          location: {
-            index: 0
-          }
+                //EXAMEN
+                modelPrompt += '; Limitar las preguntas de opción múltiple a un máximo de cuatro opciones y un mínimo de tres opciones.';
+                modelPrompt += '; Las preguntas con respuestas abiertas no deben ser demasiado extensas y no pueden exceder un máximo de tres por examen.';
+                break;
+            case 'secundario':
+                modelPrompt += '; responder como un profesor de nivel secundario (prohibido usar emojis)';
+                break;
+            case 'superior':
+                modelPrompt += '; responder como un profesor de nivel terciario (prohibido usar emojis)';
+                break;
+            case 'autodidacta':
+                modelPrompt += '; responder como un autodidacta (prohibido usar emojis)';
+                break;
+            default:
+                throw new Error(`Tipo '${tipo}' no reconocido`);
         }
-      }
-      // Añadir más preguntas según sea necesario
-    ];
 
-    await forms.forms.batchUpdate({
-      formId: formId,
-      requestBody: { requests }
-    });
+        const result = await model.generateContent(modelPrompt);
+        const response = result.response;
+        return response.candidates[0].content.parts[0].text;
 
-    // Recuperar el formulario actualizado
-    const updatedForm = await forms.forms.get({ formId });
-    res.status(200).json(updatedForm.data);
-  } catch (error) {
-    console.error('Error al crear el formulario:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Función para hacer una solicitud a la API de Gemini con manejo de errores
-const makeGeminiRequest = async () => {
-  try {
-    const response = await axios.post('https://api.gemini.com/v1/generate-question', {
-      prompt: "Genera una pregunta de opción múltiple sobre matemáticas para estudiantes de secundaria.",
-      apiKey: process.env.GEMINI_API_KEY
-    });
-    return response.data;
-  } catch (error) {
-    if (error.response) {
-      console.error('Error en la respuesta de la API:', error.response.data);
-    } else if (error.request) {
-      console.error('Error en la solicitud a la API:', error.request);
-    } else {
-      console.error('Error general:', error.message);
+    } catch (error) {
+        console.error('Error al realizar la solicitud a la API de Gemini:', error);
+        throw error;
     }
-    throw error;
-  }
 };
 
-// Ruta para generar pregunta
-app.get('/generate-question', async (req, res) => {
-  try {
-    const questionData = await makeGeminiRequest();
-    const question = questionData.question.trim();
-    res.status(200).json({ question });
-  } catch (error) {
-    console.error('Error al generar la pregunta:', error);
-    res.status(500).json({ error: 'Error al generar la pregunta' });
-  }
+const generarExamen = (temas) => {
+    let examen = [];
+
+    temas.forEach(tema => {
+        let pregunta = {
+            tema: tema,
+            tipo: 'opcion_multiple',
+            pregunta: 'Pregunta relacionada al tema...',
+            opciones: ['Opción A', 'Opción B', 'Opción C', 'Opción D'],
+            respuesta_correcta: 'Opción correcta'
+        };
+        examen.push(pregunta);
+
+        let preguntaDesarrollo = {
+            tema: tema,
+            tipo: 'desarrollo',
+            pregunta: 'Pregunta de desarrollo relacionada al tema...'
+        };
+        examen.push(preguntaDesarrollo);
+    });
+    return examen;
+}
+
+const puntuarExamen = (respuestasUsuario, examen) => {
+    let puntaje = 0;
+
+    examen.forEach(pregunta => {
+        if (pregunta.tipo === 'opcion_multiple') {
+            if (respuestasUsuario[pregunta.tema] === pregunta.respuesta_correcta) {
+                puntaje += 1;
+            }
+        }
+    });
+
+    return puntaje;
+};
+
+app.post('/generate-question', async (req, res) => {
+    try {
+        const { prompt, tipo } = req.body; // Obtiene prompt y tipo del cuerpo del mensaje
+        const questionData = await makeGeminiRequest(prompt, tipo);
+        console.log('Datos de la pregunta recibidos:', questionData);
+
+        res.status(200).json({ question: questionData });
+    } catch (error) {
+        console.error('Error al generar la pregunta:', error);
+        res.status(500).json({ error: 'Error al generar la pregunta' });
+    }
 });
 
 app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
