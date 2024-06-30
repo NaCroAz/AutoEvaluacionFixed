@@ -42,7 +42,8 @@ function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
     const fetchInitialMessages = async () => {
         setChatMessages([
             { content: '¡Bienvenido! Soy SkillBot (nivel superior)', sender: 'bot3', timestamp: new Date() },
-            { content: 'Profundiza en los temas seleccionados y verifica tu nivel de comprensión académica.', sender: 'bot3', timestamp: new Date() }
+            { content: 'Profundiza en los temas seleccionados y verifica tu nivel de comprensión académica.', sender: 'bot3', timestamp: new Date() },
+            { content: 'Ingrese la carrera en la que se encuentra y el tema a evaluar', sender: 'bot3', timestamp: new Date() }
         ]);
     };
 
@@ -120,9 +121,10 @@ function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
             .then(response => response.json())
             .then(data => {
                 const puntaje = data.puntaje;
-                const resultados = `Resultados del examen: ${puntaje >= examen.length / 2 ? 'Aprobado' : 'No aprobado'}`;
+                const resultados = `Resultados del examen: ${puntaje >= examen.length / 2 ? 'No aprobado' : 'Aprobado'}`;
                 const mensajeResultado = { content: resultados, sender: 'bot3', timestamp: new Date() };
                 setChatMessages(prevMessages => [...prevMessages, mensajeResultado]);
+                setInputValue('');
             })
             .catch(error => {
                 console.error('Error al evaluar el examen:', error);
@@ -145,7 +147,7 @@ function PagSecundaria3({ isDarkMode, setIsDarkMode }) {
                 <label htmlFor="toggle" className="slider round"></label>
             </button>
             <div className='form_container3'>
-                <div ref={chatAreaRef} className='chat_area' style={{ backgroundImage: `url(${logoSrc})`, overflowY: 'auto' }}>
+                <div ref={chatAreaRef} className='chat_area3' style={{ backgroundImage: `url(${logoSrc})`, overflowY: 'auto' }}>
                     {chatMessages.map((message, index) => (
                         <div key={index} className={`message ${message.sender}`}>
                             {typeof message.content === 'string' ?

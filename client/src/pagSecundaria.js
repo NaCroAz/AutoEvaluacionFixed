@@ -42,7 +42,8 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
     const fetchInitialMessages = () => {
         setChatMessages([
             { content: '¡Bienvenido! Soy SkillBot (nivel primario)', sender: 'bot1', timestamp: new Date() },
-            { content: '¿Listo para demostrar tu conocimiento y alcanzar tu potencial?', sender: 'bot1', timestamp: new Date() }
+            { content: '¿Listo para demostrar tu conocimiento y alcanzar tu potencial?', sender: 'bot1', timestamp: new Date() },
+            { content: 'Ingrese el grado en el que se encuentra y el tema a evaluar, puedes fusionarlo con alguna tematica que te guste!', sender: 'bot1', timestamp: new Date() }
         ]);
     };
 
@@ -117,9 +118,10 @@ function PagSecundaria({ isDarkMode, setIsDarkMode }) {
             .then(response => response.json())
             .then(data => {
                 const puntaje = data.puntaje;
-                const resultados = `Resultados del examen: ${puntaje >= examen.length / 2 ? 'Aprobado' : 'No aprobado'}`;
+                const resultados = `Resultados del examen: ${puntaje >= examen.length / 2 ? 'No aprobado' : 'Aprobado'}`;
                 const mensajeResultado = { content: resultados, sender: 'bot1', timestamp: new Date() };
                 setChatMessages(prevMessages => [...prevMessages, mensajeResultado]);
+                setInputValue('');
             })
             .catch(error => {
                 console.error('Error al evaluar el examen:', error);
