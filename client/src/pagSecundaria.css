@@ -80,6 +80,7 @@
 
 .concepto::-webkit-scrollbar-track {
   background-color: var(--color-fondo);
+  border-radius: 4px;
 }
 
 .message.bot1 {
@@ -109,26 +110,49 @@
   position: relative;
   border-radius: 25px;
   padding: 5px 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
 
-.input_container input {
-  flex: 1;
+.input_container textarea {  
+  font-family: "Public Sans", sans-serif;
+  flex: 9;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 18px;
+  max-height: 50px;
+  min-height: 25px;
   padding: 12px;
   border-radius: 25px;
   background-color: var(--color-rojo);
   color: var(--color-texto);
   z-index: 1;
+  margin-right: 18vh;
+  transition: all 500ms;
+  resize: none;
 }
 
-.input_container input::placeholder {
+.input_container textarea::placeholder {
   color: rgba(255, 255, 255, 0.548);
+  font-weight: bold;
+}
+
+.input_container textarea::-webkit-scrollbar {
+  width: 10px;
+  box-shadow: -5px 0 5px var(--color-fondo);
+}
+
+.input_container textarea::-webkit-scrollbar-thumb {
+  background-color: var(--color-rojo);
+  border-radius: 4px;
+}
+
+.input_container textarea::-webkit-scrollbar-track {
+  background-color: var(--color-fondo);
+  border-radius: 4px;
 }
 
 .input_container button {
+  flex: 1;
   position: absolute;
   font-weight: bold;
   right: 10px;
@@ -144,6 +168,12 @@
   font-size: 14px;
   transition: background-color 0.3s ease;
   z-index: 2;
+}
+
+.input_container button:hover {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.2);
 }
 
   

@@ -21,7 +21,9 @@ function PagPrincipal({ isDarkMode, setIsDarkMode }) {
 
     const toggleConcepto = (e) => {
         e.preventDefault();
-        setShowConcepto(!showConcepto);
+        if (showConcepto === false) {
+            setShowConcepto(!showConcepto);
+        }
         setShowInicio(false);
     };
 
@@ -49,7 +51,7 @@ function PagPrincipal({ isDarkMode, setIsDarkMode }) {
             <div>
                 {showInicio && (
                     <>
-                        <h1>Seleccione el nivel para SkillScore</h1>
+                        <h1>Seleccione el nivel para SkillSCORE</h1>
                         <div className="cards-container">
                             <div className="card-item" id='primaria' onClick={() => handleNavigate('/pagSecundaria')}>
                                 <div className="card-number">#1</div>

@@ -176,6 +176,19 @@ input:checked+.slider:before {
   cursor: pointer;
 }
 
+#primaria:hover{
+  box-shadow: 0 0 10px #F04242;
+}
+#secundaria:hover{
+  box-shadow: 0 0 10px #F7BC37;
+}
+#superior:hover{
+  box-shadow: 0 0 10px #0ACE7C;
+}
+#autodidacta:hover{
+  box-shadow: 0 0 10px #4950EB;
+}
+
 .card-item .card-number {
   position: absolute;
   top: 10px;
@@ -245,7 +258,7 @@ h2 {
 }
 
 .concepto {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
@@ -277,7 +290,7 @@ final-text {
   font-size: 1.2rem;
   color: #a7a7a7;
   margin-top: 10px;
-  text-align: justify;
+  text-align: center;
 }
 
 .final-text2 strong {
